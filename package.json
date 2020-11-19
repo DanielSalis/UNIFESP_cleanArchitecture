@@ -1,0 +1,19 @@
+{
+  "name": "unifesp_cleanarchitecture",
+  "version": "1.0.0",
+  "description": "Repositório com finalidade de armazenar as atividades práticas do curso de Clean Architecture",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielSalis/UNIFESP_cleanArchitecture.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DanielSalis/UNIFESP_cleanArchitecture/issues"
+  },
+  "homepage": "https://github.com/DanielSalis/UNIFESP_cleanArchitecture#readme"
+}
