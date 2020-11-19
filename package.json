@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/DanielSalis/UNIFESP_cleanArchitecture/issues"
   },
-  "homepage": "https://github.com/DanielSalis/UNIFESP_cleanArchitecture#readme"
+  "homepage": "https://github.com/DanielSalis/UNIFESP_cleanArchitecture#readme",
+  "devDependencies": {
+    "git-commit-msg-linter": "^3.0.0"
+  }
 }
