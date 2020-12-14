@@ -55,25 +55,25 @@ describe('Email validation', () => {
     expect(Email.validate(email)).toBeFalsy()
   })
 
-  test('should not accept locals with invalid characters', () => {
+  test('should not accept local part with invalid characters', () => {
     const email = 'any @mail.com'
 
     expect(Email.validate(email)).toBeFalsy()
   })
 
-  test('should not accept locals with ..', () => {
+  test('should not accept local part with ..', () => {
     const email = 'any..email@mail.com'
 
     expect(Email.validate(email)).toBeFalsy()
   })
 
-  test('should not accept locals with "." before "@"', () => {
+  test('should not accept local part with "." before "@"', () => {
     const email = 'any.@mail.com'
 
     expect(Email.validate(email)).toBeFalsy()
   })
 
-  test('should not accept locals without "@"', () => {
+  test('should not accept locals without an at-sign', () => {
     const email = 'anymail.com'
 
     expect(Email.validate(email)).toBeFalsy()
