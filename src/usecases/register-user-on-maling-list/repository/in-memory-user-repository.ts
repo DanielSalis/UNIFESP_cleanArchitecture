@@ -1,8 +1,8 @@
 import { UserRepository } from '../ports/user-repository'
-import { UserData } from '../user-data'
+import { UserData } from '../../../entities/user-data'
 
 export class InMemoryUserRepository implements UserRepository {
-  private repository: UserData[];
+  private repository: UserData[]
 
   constructor (repository: UserData[]) {
     this.repository = repository
@@ -25,7 +25,7 @@ export class InMemoryUserRepository implements UserRepository {
   }
 
   async exists (user: UserData): Promise<boolean> {
-    if (await this.findUserByEmail(user.email) == null) {
+    if (await this.findUserByEmail(user.email) === null) {
       return false
     }
     return true
