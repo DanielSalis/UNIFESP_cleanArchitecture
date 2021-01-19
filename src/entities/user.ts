@@ -20,15 +20,17 @@ export class User {
       const emailOrError = Email.create(userData.email)
       const nameOrError = Name.create(userData.name)
 
-      if (emailOrError.isLeft()) {
-        return left(new InvalidEmailError())
+      if (nameOrError.isLeft()) {
+        return left(new InvalidNameError(userData.name))
       }
 
-      if (nameOrError.isLeft()) {
-        return left(new InvalidNameError())
+      if (emailOrError.isLeft()) {
+        return left(new InvalidEmailError(userData.email))
       }
+
       const name: Name = nameOrError.value as Name
       const email: Email = emailOrError.value as Email
+
       return right(new User(name, email))
     }
 }
