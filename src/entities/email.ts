@@ -12,7 +12,7 @@ export class Email {
     if (Email.validate(email)) {
       return right(new Email(email))
     }
-    return left(new InvalidEmailError())
+    return left(new InvalidEmailError(email))
   }
 
   static validate (email: string): boolean {
