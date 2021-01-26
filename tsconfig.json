@@ -6,5 +6,10 @@
         "esModuleInterop": true,
         "allowJs": true,
         "types": ["node", "jest"],
+        "baseUrl": ".",
+        "paths": {
+            "@/*":["src/*"],
+            "@test/*":["test/*"]
+        }
     }
 }
