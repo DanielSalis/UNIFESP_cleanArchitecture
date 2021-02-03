@@ -20,7 +20,7 @@ export class RegisterUserController {
         }
 
         const userData: UserData = request.body
-        const response = await this.usecase.registerUserOnMainlingList(userData)
+        const response = await this.usecase.perform(userData)
 
         if (response.isLeft()) {
           return badRequest(response.value)
