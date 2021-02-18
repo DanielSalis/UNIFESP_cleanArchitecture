@@ -1,113 +1,104 @@
-import { HttpResponse, HttpRequest } from '@/web-controllers/ports'
-
-import { RegisterUserOnMailingList } from '@/usecases/register-user-on-maling-list'
-import { UserData } from '@/entities'
-import { UserRepository } from '@/usecases/register-user-on-maling-list/ports'
-import { InMemoryUserRepository } from '@test/usecases/register-user-on-maling-list/repository'
+import { HttpRequest, HttpResponse } from '@/web-controllers/ports'
 import { RegisterUserController } from '@/web-controllers/register-user-controller'
-import { InvalidEmailError, InvalidNameError } from '@/entities/errors'
+import { UserData } from '@/entities'
+import { InvalidNameError, InvalidEmailError } from '@/entities/errors'
+import { RegisterUserOnMailingList } from '@/usecases/register-user-on-mailing-list'
+import { UserRepository } from '@/usecases/register-user-on-mailing-list/ports'
+import { InMemoryUserRepository } from '@/usecases/register-user-on-mailing-list/repository'
 import { MissingParamError } from '@/web-controllers/errors/missing-param-error'
-import { UseCase } from '@/usecases/ports'
+import { UseCase } from '@/usecases/ports/use-case'
 
-describe('Register user web controller', () => {
-  const users: UserData[] = []
-  const repo: UserRepository = new InMemoryUserRepository(users)
-  const usecase: UseCase = new RegisterUserOnMailingList(repo)
-  const controller: RegisterUserController = new RegisterUserController(usecase)
-
+describe('Register user web Controller', () => {
   class ErrorThrowingUseCaseStub implements UseCase {
     perform (request: any): Promise<void> {
       throw Error()
     }
   }
 
-  const errorThrowingUseCaseStub: UseCase = new ErrorThrowingUseCaseStub()
+  const users: UserData[] = []
+  const repo: UserRepository = new InMemoryUserRepository(users)
+  const usecase: UseCase = new RegisterUserOnMailingList(repo)
+  const controller: RegisterUserController = new RegisterUserController(usecase)
 
-  test('should return status code 201 when request contains a valid user data', async () => {
+  test('should return 201 if request contains valid data', async () => {
     const request: HttpRequest = {
       body: {
         name: 'Any name',
-        email: 'any@mail.com'
+        email: 'any@email.com'
       }
     }
-
     const response: HttpResponse = await controller.handle(request)
     expect(response.statusCode).toEqual(201)
     expect(response.body).toEqual(request.body)
   })
 
-  test('should return status code 400 when request contains invalid name', async () => {
-    const requestWithInvalidName: HttpRequest = {
+  test('should return 400 if request contains invalid name', async () => {
+    const invalidRequest: HttpRequest = {
       body: {
         name: 'A',
-        email: 'any@mail.com'
+        email: 'any@email.com'
       }
     }
-
-    const response: HttpResponse = await controller.handle(requestWithInvalidName)
+    const response: HttpResponse = await controller.handle(invalidRequest)
     expect(response.statusCode).toEqual(400)
     expect(response.body).toBeInstanceOf(InvalidNameError)
   })
 
-  test('should return status code 400 when request contains invalid name', async () => {
-    const requestWithInvalidEmail: HttpRequest = {
+  test('should return 400 if request contains invalid email', async () => {
+    const invalidRequest: HttpRequest = {
       body: {
         name: 'Any name',
-        email: 'invalid_mail.com'
+        email: 'invalid_email.com'
       }
     }
-
-    const response: HttpResponse = await controller.handle(requestWithInvalidEmail)
+    const response: HttpResponse = await controller.handle(invalidRequest)
     expect(response.statusCode).toEqual(400)
     expect(response.body).toBeInstanceOf(InvalidEmailError)
   })
 
-  test('should return status code 400 when request is missing user name', async () => {
-    const requestWithMissingName: HttpRequest = {
+  test('should return 400 if request is missing user name', async () => {
+    const invalidRequest: HttpRequest = {
       body: {
-        email: 'any@mail.com'
+        email: 'any@email.com'
       }
     }
-
-    const response: HttpResponse = await controller.handle(requestWithMissingName)
+    const response: HttpResponse = await controller.handle(invalidRequest)
     expect(response.statusCode).toEqual(400)
     expect(response.body).toBeInstanceOf(MissingParamError)
     expect((response.body as Error).message).toEqual('Missing parameter from request: name.')
   })
 
-  test('should return status code 400 when request is missing user email', async () => {
-    const requestWithMissingEmail: HttpRequest = {
+  test('should return 400 if request is missing email', async () => {
+    const invalidRequest: HttpRequest = {
       body: {
         name: 'Any name'
       }
     }
-
-    const response: HttpResponse = await controller.handle(requestWithMissingEmail)
+    const response: HttpResponse = await controller.handle(invalidRequest)
     expect(response.statusCode).toEqual(400)
     expect(response.body).toBeInstanceOf(MissingParamError)
     expect((response.body as Error).message).toEqual('Missing parameter from request: email.')
   })
 
-  test('should return status code 400 when request is missing user email', async () => {
-    const requestWithMissingNameAndEmail: HttpRequest = {
+  test('should return 400 if request is missing name and email', async () => {
+    const invalidRequest: HttpRequest = {
       body: {
       }
     }
-
-    const response: HttpResponse = await controller.handle(requestWithMissingNameAndEmail)
+    const response: HttpResponse = await controller.handle(invalidRequest)
     expect(response.statusCode).toEqual(400)
     expect(response.body).toBeInstanceOf(MissingParamError)
     expect((response.body as Error).message).toEqual('Missing parameter from request: name email.')
   })
 
-  test('should return status code 500 when server raises', async () => {
+  test('should return 500 if server raises', async () => {
     const request: HttpRequest = {
       body: {
         name: 'Any name',
-        email: 'any@mail.com'
+        email: 'any@email.com'
       }
     }
-
+    const errorThrowingUseCaseStub: UseCase = new ErrorThrowingUseCaseStub()
     const controller: RegisterUserController = new RegisterUserController(errorThrowingUseCaseStub)
     const response: HttpResponse = await controller.handle(request)
     expect(response.statusCode).toEqual(500)
